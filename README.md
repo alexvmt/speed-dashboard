@@ -18,22 +18,26 @@ The user has the following options to customize the speed summary table:
 
 The speed summary table contains the following columns:
 - the first column is the id column of the respective data set
-- **first_time**: first timestamp per individual
-- **first_location**: first location per individual (long/lat)
-- **last_time**: last timestamp per individual
-- **last_location**: last location per individual (long/lat)
-- **max_speed**: maxmimum between locations speed per individual
-- **n_above_speed_threshold**: number of observations above set speed threshold per individual
-- **distance_above_speed_threshold**: distance moved above set speed threshold per individual
-- **time_above_speed_threshold**: time spent above set speed threshold per individual
-- **speed threshold**: set speed threshold
-- **threshold_behavior_tag**: tag indicating what kind of behavior is represented by the observations above the set speed threshold
+- `first_time`: first timestamp per individual
+- `first_location`: first location per individual (long/lat)
+- `last_time`: last timestamp per individual
+- `last_location`: last location per individual (long/lat)
+- `max_speed`: maxmimum between locations speed per individual
+- `n_above_speed_threshold`: number of observations above set speed threshold per individual
+- `distance_above_speed_threshold`: distance moved above set speed threshold per individual
+- `time_above_speed_threshold`: time spent above set speed threshold per individual
+- `speed threshold`: set speed threshold
+- `threshold_behavior_tag`: tag indicating what kind of behavior is represented by the observations above the set speed threshold
+
 There is also a button that allows the user to directly download the currently displayed table as a CSV.
 Where applicable the columns show the respectively selected units which are integrated into the column names when exported (button or ouput).
 The table can be sorted and filtered.
 
 It might be useful to include the App in a Workflow in combination with other Apps
-that remove speed outliers (e. g. above 100 km/h) or filter the data to a desired time period (e. g. last 30 days).
+that, for example, remove speed outliers (e. g. above 100 km/h) or filter the data to a desired time period (e. g. last 30 days).
+
+When including the App in a scheduled Workflow, before the first run,
+remember to open the UI in MoveApps and store the desired settings to be used in subsequent runs via the respective button at the bottom of the UI.
 
 Here's an exemplary screenshot using some stork data:
 ![speed_dashboard](screenshots/speed_dashboard.png 'speed_dashboard')
