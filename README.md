@@ -1,39 +1,62 @@
-# Name of App *(Give your app a short and informative title. Please adhere to our convention of Title Case without hyphens (e.g. My New App))*
+# Speed Dashboard
 
 MoveApps
 
-Github repository: *github.com/yourAccount/Name-of-App* *(the link to the repository where the code of the app can be found must be provided)*
+Github repository: https://github.com/alexvmt/speed-dashboard
 
 ## Description
-*Enter here the short description of the App that might also be used when filling out the description when submitting the App to Moveapps. This text is directly presented to Users that look through the list of Apps when compiling Workflows.*
+This App provides a customizable speed summary per individual,
+including maximum speed, number of observations, distance moved and time spent - the latter 3 above a speed threshold set by the user.
 
 ## Documentation
-*Enter here a detailed description of your App. What is it intended to be used for. Which steps of analyses are performed and how. Please be explicit about any detail that is important for use and understanding of the App and its outcomes.*
+The user has the following options to customize the speed summary table:
+- **Speed units**: `m/s` or `km/h` (default `km/h`)
+- **Distance units**: `m` or `km` (default `km`)
+- **Time units**: `s`, `min`, `h` or `d` (default `h`)
+- **Speed threshold**: only observations above the set speed threshold are considered for the number of observations, the distance moved and the time spent (default `5`, min `1`, max `100`)
+- **Threshold behavior tag**: add a tag (e. g. flight) describing the behavior represented by the observations above the set speed threshold (empty by default)
+
+The speed summary table contains the following columns:
+- the first column is the id column of the respective data set
+- **first_time**: first timestamp per individual
+- **first_location**: first location per individual (long/lat)
+- **last_time**: last timestamp per individual
+- **last_location**: last location per individual (long/lat)
+- **max_speed**: maxmimum between locations speed per individual
+- **n_above_speed_threshold**: number of observations above set speed threshold per individual
+- **distance_above_speed_threshold**: distance moved above set speed threshold per individual
+- **time_above_speed_threshold**: time spent above set speed threshold per individual
+- **speed threshold**: set speed threshold
+- **threshold_behavior_tag**: tag indicating what kind of behavior is represented by the observations above the set speed threshold
+There is also a button that allows the user to directly download the currently displayed table as a CSV.
+Where applicable the columns show the respectively selected units which are integrated into the column names when exported (button or ouput).
+The table can be sorted and filtered.
+
+It might be useful to include the App in a Workflow in combination with other Apps
+that remove speed outliers (e. g. above 100 km/h) or filter the data to a desired time period (e. g. last 30 days).
+
+Here's an exemplary screenshot using some stork data:
+![speed_dashboard](screenshots/speed_dashboard.png 'speed_dashboard')
 
 ### Input data
-*Indicate which type of input data the App requires. Currently only R objects of class `MoveStack` can be used. This will be extend in the future.*
-
-*Example*: MoveStack in Movebank format
+move2_loc
 
 ### Output data
-*Indicate which type of output data the App produces to be passed on to subsequent apps. Currently only R objects of class `MoveStack` can be used. This will be extend in the future. In case the App does not pass on any data (e.g. a shiny visualization app), it can be also indicated here that no output is produced to be used in subsequent apps.*
-
-*Example:* MoveStack in Movebank format
+move2_loc and Shiny user interface (UI)
 
 ### Artefacts
-*If the App creates artefacts (e.g. csv, pdf, jpeg, shapefiles, etc), please list them here and describe each.*
-
-*Example:* `rest_overview.csv`: csv-file with Table of all rest site properties
+`speed_summary.csv`: CSV file with table containing speed statistics for each individual
 
 ### Settings
-*Since our switch to use shiny bookmarks for storing seleted settings made in the UI, it is not possible any more to have settings in MoveApps to set before running the App and opening the UI. Instead a `store settings` button is included in the UI.
-
-`Store settings`: click to store the current settings of the app for future workflow runs
+`Store settings`: click to store the current settings of the App for future Workflow runs
 
 ### Most common errors
-*Please describe shortly what most common errors of the App can be, how they occur and best ways of solving them.*
+- The Shiny Dashboard might crash in MoveApps when a numeric input is first deleted and only then a new value is entered.
+Reload the page to start fresh if that happens.
+To avoid this issue, overwrite numeric inputs directly with new values instead of deleting them or use the input controls.
+- Make sure that the sensor type id is GPS exclusively.
+Otherwise the speed, distance and time lag calculations might fail.
+- Also make sure the data per individual is ordered correctly (ascending by timestamp) or the respective calculations might fail as well.
 
 ### Null or error handling
-*Please indicate for each setting as well as the input data which behaviour the App is supposed to show in case of errors or NULL values/input. Please also add notes of possible errors that can happen if UI settings/parameters are improperly set and any other important information that you find the user should be aware of.*
-
-*Example:* **Setting `input$radius`:** If no radius AND no duration are given, the input data set is returned with a warning. If no radius is given (NULL), but a duration is defined then a default radius of 1000m = 1km is set. 
+Data is taken as is and only processed for the respective calculations.
