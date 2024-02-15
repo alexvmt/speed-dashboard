@@ -1,16 +1,14 @@
-library("shiny")
-library("move2")
-library("sf")
-library("dplyr")
-library("tidyr")
-library("units")
+library(shiny)
+library(move2)
+library(sf)
+library(dplyr)
+library(tidyr)
+library(units)
 
 # disable scientific notation
 options(scipen = 999)
 
-# set limits and default for speed threshold
-limit_lower_speed_threshold <- 1
-limit_upper_speed_threshold <- 100
+# set default for speed threshold
 default_speed_threshold <- 5
 
 shinyModuleUserInterface <- function(id, label) {
@@ -45,9 +43,7 @@ shinyModuleUserInterface <- function(id, label) {
       column(2,
              numericInput(ns("speed_threshold"),
                           "Speed threshold",
-                          default_speed_threshold,
-                          min = limit_lower_speed_threshold,
-                          max = limit_upper_speed_threshold)
+                          default_speed_threshold)
       ),
       column(2,
              textInput(ns("threshold_behavior_tag"),
@@ -119,9 +115,9 @@ shinyModule <- function(input, output, session, data) {
       mutate(speed = set_units(speed, NULL),
              distance = set_units(distance, NULL),
              time = set_units(time, NULL)) %>% 
-      filter(speed > input$speed_threshold 
-             & !is.na(speed) 
-             & !is.na(distance) 
+      filter(speed > input$speed_threshold
+             & !is.na(speed)
+             & !is.na(distance)
              & !is.na(time)) %>% 
       group_by(.data[[id_column_name]]) %>% 
       summarise(n_above_speed_threshold = n(),
@@ -160,9 +156,9 @@ shinyModule <- function(input, output, session, data) {
   # add units to column names for output and download
   rctv_speed_summary_output <- reactive({
 
-    speed_summary_output <- rctv_speed_summary() %>%
-      rename(setNames("max_speed", paste0("max_speed", "_", gsub("/", "", input$speed_units)))) %>%
-      rename(setNames("distance_above_speed_threshold", paste0("distance_above_speed_threshold", "_", input$distance_units))) %>%
+    speed_summary_output <- rctv_speed_summary() %>% 
+      rename(setNames("max_speed", paste0("max_speed", "_", gsub("/", "", input$speed_units)))) %>% 
+      rename(setNames("distance_above_speed_threshold", paste0("distance_above_speed_threshold", "_", input$distance_units))) %>% 
       rename(setNames("time_above_speed_threshold", paste0("time_above_speed_threshold", "_", input$time_units))) %>% 
       rename(setNames("speed_threshold", paste0("speed_threshold", "_", gsub("/", "", input$speed_units))))
 
@@ -172,19 +168,30 @@ shinyModule <- function(input, output, session, data) {
   
   # save speed summary table as artifact
   observe({
-    
+
     artifact <- "speed_summary.csv"
     write.csv(rctv_speed_summary_output(), appArtifactPath(artifact), row.names = FALSE)
-    logger.info(paste0("Saving speed summary table: ", artifact))
-    
+    logger.info(paste0("Saving speed summary table as App output in MoveApps: ",
+                       artifact,
+                       "; speed units: ",
+                       input$speed_units,
+                       "; distance units: ",
+                       input$distance_units,
+                       "; time units: ",
+                       input$time_units,
+                       "; speed threshold: ",
+                       input$speed_threshold,
+                       "; threshold behavior tag: ",
+                       input$threshold_behavior_tag))
+
   })
   
   # make table downloadable via button
   output$download_table <- downloadHandler(
-    
-    filename = function(){"speed_summary.csv"},
-    content = function(fname){write.csv(rctv_speed_summary_output(), file = fname, row.names = FALSE)}
-    
+
+    filename <- function(){"speed_summary.csv"},
+    content <- function(fname){write.csv(rctv_speed_summary_output(), file = fname, row.names = FALSE)}
+                
   )
   
   # data must be returned. Either the unmodified input data, or the modified data by the app

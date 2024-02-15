@@ -9,11 +9,11 @@ This App provides a customizable speed summary per individual,
 including maximum speed, number of observations, distance moved and time spent - the latter 3 above a speed threshold set by the user.
 
 ## Documentation
-The user has the following options to customize the speed summary table:
+The user has the following options to customize the speed summary:
 - **Speed units**: `m/s` or `km/h` (default `km/h`)
 - **Distance units**: `m` or `km` (default `km`)
 - **Time units**: `s`, `min`, `h` or `d` (default `h`)
-- **Speed threshold**: only observations above the set speed threshold are considered for the number of observations, the distance moved and the time spent (default `5`, min `1`, max `100`)
+- **Speed threshold**: only observations above the set speed threshold (in the previously set speed units) are considered for the number of observations, the distance moved and the time spent (default `5`)
 - **Threshold behavior tag**: add a tag (e. g. flight) describing the behavior represented by the observations above the set speed threshold (empty by default)
 
 The speed summary table contains the following columns:
@@ -22,7 +22,7 @@ The speed summary table contains the following columns:
 - `first_location`: first location per individual (long/lat)
 - `last_time`: last timestamp per individual
 - `last_location`: last location per individual (long/lat)
-- `max_speed`: maxmimum between locations speed per individual
+- `max_speed`: maximum between locations speed per individual
 - `n_above_speed_threshold`: number of observations above set speed threshold per individual
 - `distance_above_speed_threshold`: distance moved above set speed threshold per individual
 - `time_above_speed_threshold`: time spent above set speed threshold per individual
@@ -30,7 +30,7 @@ The speed summary table contains the following columns:
 - `threshold_behavior_tag`: tag indicating what kind of behavior is represented by the observations above the set speed threshold
 
 There is also a button that allows the user to directly download the currently displayed table as a CSV.
-Where applicable the columns show the respectively selected units which are integrated into the column names when exported (button or ouput).
+Where applicable the columns show the respectively selected units which are integrated into the column names when exported (via button or as ouput).
 The table can be sorted and filtered.
 
 It might be useful to include the App in a Workflow in combination with other Apps
