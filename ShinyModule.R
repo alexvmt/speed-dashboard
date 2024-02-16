@@ -153,27 +153,43 @@ shinyModule <- function(input, output, session, data) {
   
   output$speed_summary <- renderDataTable({ rctv_speed_summary() })
   
-  # add units to column names for output and download
-  rctv_speed_summary_output <- reactive({
+  # add units to column names for downloading table
+  rctv_speed_summary_download <- reactive({
 
-    speed_summary_output <- rctv_speed_summary() %>% 
+    speed_summary_download <- rctv_speed_summary() %>% 
       rename(setNames("max_speed", paste0("max_speed", "_", gsub("/", "", input$speed_units)))) %>% 
       rename(setNames("distance_above_speed_threshold", paste0("distance_above_speed_threshold", "_", input$distance_units))) %>% 
       rename(setNames("time_above_speed_threshold", paste0("time_above_speed_threshold", "_", input$time_units))) %>% 
       rename(setNames("speed_threshold", paste0("speed_threshold", "_", gsub("/", "", input$speed_units))))
 
-    speed_summary_output
+    speed_summary_download
 
   })
   
-  # save speed summary table as artifact
-  observe({
+  # add reactive value that can be incremented and thus used as trigger when downloading table
+  rv <- reactiveValues(download_flag = 0)
+  
+  # download table via click on download button
+  output$download_table <- downloadHandler(
 
-    artifact <- "speed_summary.csv"
-    write.csv(rctv_speed_summary_output(), appArtifactPath(artifact), row.names = FALSE)
-    logger.info(paste0("Saving speed summary table as App output in MoveApps: ",
-                       artifact,
-                       "; speed units: ",
+    filename <- function(){"speed_summary.csv"},
+    content <- function(fname){
+      
+      # save speed summary table as csv
+      write.csv(rctv_speed_summary_download(), file = fname, row.names = FALSE)
+      
+      # increment download flag so that download can be registered and info is written to log
+      rv$download_flag <- rv$download_flag + 1
+      
+    }
+  
+  )
+  
+  # log info on downloaded table
+  observeEvent(rv$download_flag, {
+    
+    logger.info(paste0("Dowloading speed summary table with following inputs: ",
+                       "speed units: ",
                        input$speed_units,
                        "; distance units: ",
                        input$distance_units,
@@ -183,16 +199,8 @@ shinyModule <- function(input, output, session, data) {
                        input$speed_threshold,
                        "; threshold behavior tag: ",
                        input$threshold_behavior_tag))
-
-  })
   
-  # make table downloadable via button
-  output$download_table <- downloadHandler(
-
-    filename <- function(){"speed_summary.csv"},
-    content <- function(fname){write.csv(rctv_speed_summary_output(), file = fname, row.names = FALSE)}
-                
-  )
+  }, ignoreInit = TRUE)
   
   # data must be returned. Either the unmodified input data, or the modified data by the app
   return(reactive({ current() }))
