@@ -23,6 +23,7 @@ The speed summary table contains the following columns:
 - `last_time`: last timestamp per individual
 - `last_location`: last location per individual (long/lat)
 - `max_speed`: maximum between locations speed per individual
+- `median_speed`: median between locations speed per individual
 - `n_above_speed_threshold`: number of observations above set speed threshold per individual
 - `distance_above_speed_threshold`: distance moved above set speed threshold per individual
 - `time_above_speed_threshold`: time spent above set speed threshold per individual

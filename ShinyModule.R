@@ -124,8 +124,8 @@ shinyModule <- function(input, output, session, data) {
                 distance_above_speed_threshold = sum(distance),
                 time_above_speed_threshold = sum(time))
     
-    # calculate max speeds
-    max_speeds <- data_transformed %>% 
+    # calculate max and median speed
+    max_and_median_speed <- data_transformed %>% 
       mutate(speed = set_units(speed, NULL)) %>% 
       filter(!is.na(speed)) %>% 
       group_by(.data[[id_column_name]]) %>% 
@@ -133,15 +133,17 @@ shinyModule <- function(input, output, session, data) {
                 first_location = paste0("(", first(long), ", ", first(lat), ")"),
                 last_time = last(.data[[time_column_name]]),
                 last_location = paste0("(", last(long), ", ", last(lat), ")"),
-                max_speed = max(speed))
+                max_speed = max(speed),
+                median_speed = median(speed))
     
     # create final speed summary table
-    speed_summary <- max_speeds %>% 
+    speed_summary <- max_and_median_speed %>% 
       left_join(n_distance_and_time_above_speed_threshold, by = id_column_name) %>% 
       mutate(n_above_speed_threshold = replace_na(n_above_speed_threshold, 0),
              distance_above_speed_threshold = replace_na(distance_above_speed_threshold, 0),
              time_above_speed_threshold = replace_na(time_above_speed_threshold, 0)) %>% 
       mutate(max_speed = round(set_units(max_speed, input$speed_units, mode = "standard"), 2),
+             median_speed = round(set_units(median_speed, input$speed_units, mode = "standard"), 2),
              distance_above_speed_threshold = round(set_units(distance_above_speed_threshold, input$distance_units, mode = "standard"), 2),
              time_above_speed_threshold = round(set_units(time_above_speed_threshold, input$time_units, mode = "standard"), 2)) %>% 
       mutate(speed_threshold = set_units(input$speed_threshold, input$speed_units, mode = "standard"),
@@ -158,6 +160,7 @@ shinyModule <- function(input, output, session, data) {
 
     speed_summary_download <- rctv_speed_summary() %>% 
       rename(setNames("max_speed", paste0("max_speed", "_", gsub("/", "", input$speed_units)))) %>% 
+      rename(setNames("median_speed", paste0("median_speed", "_", gsub("/", "", input$speed_units)))) %>% 
       rename(setNames("distance_above_speed_threshold", paste0("distance_above_speed_threshold", "_", input$distance_units))) %>% 
       rename(setNames("time_above_speed_threshold", paste0("time_above_speed_threshold", "_", input$time_units))) %>% 
       rename(setNames("speed_threshold", paste0("speed_threshold", "_", gsub("/", "", input$speed_units))))
