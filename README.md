@@ -30,8 +30,8 @@ The speed summary table contains the following columns:
 - `speed threshold`: set speed threshold
 - `threshold_behavior_tag`: tag indicating what kind of behavior is represented by the observations above the set speed threshold
 
-There is also a button that allows the user to directly download the currently displayed table as a CSV.
-Where applicable the columns show the respectively selected units which are integrated into the column names when exported (via button or as ouput).
+There is also a button that allows the user to download the currently displayed table as a CSV.
+Where applicable the columns show the respectively selected units which are integrated into the column names when the table is downloaded.
 The table can be sorted and filtered.
 
 It might be useful to include the App in a Workflow in combination with other Apps
@@ -39,6 +39,9 @@ that, for example, remove speed outliers (e. g. above 100 km/h) or filter the da
 
 When including the App in a scheduled Workflow, before the first run,
 remember to open the UI in MoveApps and store the desired settings to be used in subsequent runs via the respective button at the bottom of the UI.
+
+Also note that, if the App is included in a scheduled Workflow, you have to open the UI in MoveApps and download the table from there
+as it currently can't be directly attached to the notification email.
 
 Here's an exemplary screenshot using some stork data:
 ![speed_dashboard](screenshots/speed_dashboard.png 'speed_dashboard')
@@ -50,7 +53,7 @@ move2_loc
 move2_loc and Shiny user interface (UI)
 
 ### Artefacts
-`speed_summary.csv`: CSV file with table containing speed statistics for each individual
+None
 
 ### Settings
 `Store settings`: click to store the current settings of the App for future Workflow runs
