@@ -6,7 +6,7 @@ Github repository: https://github.com/alexvmt/speed-dashboard
 
 ## Description
 This App provides a customizable speed summary per individual,
-including maximum speed, number of observations, distance moved and time spent - the latter 3 above a speed threshold set by the user.
+including maximum speed, median speed, number of observations, distance moved and time spent - the latter 3 above a speed threshold set by the user.
 
 ## Documentation
 The user has the following options to customize the speed summary:
