@@ -1,10 +1,16 @@
 # Changelog SDK
 
+## 2024-03 `v3.2.0`
+
+- introduce app-setting-type `USER_FILE`
+- deprecate app-setting-type `LOCAL_FILE`
+
 ## 2024-02 `v3.1.0`
 
 - introduce `appspec.json` version `1.2`
     - removed `createsArtifacts`. It is safe to remove it completely from your `appspec.json` - MoveApps tries now to fetch artifacts for every running App.
     - verify to include the `null` option for setting types `DROPDOWN` and `RADIOBUTTONS` if `defaultValue` is set to `null`.
+- drop `move1` dependency
 
 ## 2023-12 `v3.0.5`
 
@@ -26,7 +32,7 @@
 ## 2023-08 `v3.0.1`
 
 - removed MoveApps IO-Type dependency
-- provide new move2 input files
+- provide new `move2` input files
 - bugfix app-file loading
 
 ## 2023-06 `v3.0.0`
